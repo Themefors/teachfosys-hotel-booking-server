@@ -1,10 +1,12 @@
 import { Application } from 'express';
 import http, { Server } from 'http';
 import config from './app/config';
+import { connectDB } from './app/db/db';
 import handleSyncAsyncError from './app/middlewares/handleSyncAsyncError';
 
 const startServer = async (app: Application) => {
   try {
+    await connectDB();
     const server: Server = http.createServer(app);
 
     server.listen(config.PORT, () => {
