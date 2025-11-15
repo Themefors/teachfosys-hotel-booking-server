@@ -2,7 +2,7 @@ import { Application } from 'express';
 
 const initiateRoutes = (app: Application) => {
   app.get('/', (_req, res) => {
-    res.send('Hello World!');
+    res.send('Welcome to Teachfosys hotel booking app backend!');
   });
 };
 

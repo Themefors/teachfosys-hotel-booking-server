@@ -1,7 +1,7 @@
-import http, { Server } from "http";
-import config from "./app/config";
-import { Application } from "express";
-import handleSyncAsyncError from "./app/middlewares/handleSyncAsyncError";
+import { Application } from 'express';
+import http, { Server } from 'http';
+import config from './app/config';
+import handleSyncAsyncError from './app/middlewares/handleSyncAsyncError';
 
 const startServer = async (app: Application) => {
   try {
@@ -13,7 +13,7 @@ const startServer = async (app: Application) => {
 
     handleSyncAsyncError(server);
   } catch (error) {
-    console.error("Failed to start server");
+    console.error('Failed to start server');
     console.error(error);
     process.exit(1);
   }
