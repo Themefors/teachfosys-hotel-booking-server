@@ -1,3 +1,4 @@
+import { EStatus } from './user.enum';
 import { IUser } from './user.interface';
 import { User } from './user.model';
 
@@ -7,10 +8,15 @@ import { User } from './user.model';
  * @returns {Promise<IUser>} The created user populated with their academic faculty.
  */
 const createUser = async (payload: IUser): Promise<IUser> => {
-  const result = (await User.create(payload)).populate('academicFaculty');
+  const result = await User.create(payload);
+  return result;
+};
+const getUsers = async (): Promise<IUser[] | null> => {
+  const result = await User.find({ status: EStatus.ACTIVE });
   return result;
 };
 
 export const UserService = {
   createUser,
+  getUsers,
 };

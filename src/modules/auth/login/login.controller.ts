@@ -2,13 +2,12 @@ import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
-import { SignupService } from './signup.service';
+import { LoginService } from './login.service';
 
-const signup = catchAsync(async (req: Request, res: Response) => {
-  const signupData = req.body;
+const login = catchAsync(async (req: Request, res: Response) => {
+  const loginData = req.body;
 
-  const result = await SignupService.signup(signupData);
-
+  const result = await LoginService.login(loginData);
   const cookieOptions = {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
@@ -18,16 +17,17 @@ const signup = catchAsync(async (req: Request, res: Response) => {
   res.cookie('refreshToken', result.refreshToken, cookieOptions);
 
   sendResponse(res, {
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     success: true,
-    message: 'User created successfully! Welcome email sent.',
+    message: 'Login successful',
     data: {
       user: result.user,
       accessToken: result.accessToken,
+      refreshToken: result.refreshToken,
     },
   });
 });
 
-export const SignupController = {
-  signup,
+export const LoginController = {
+  login,
 };

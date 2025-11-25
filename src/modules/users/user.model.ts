@@ -1,4 +1,6 @@
+import bcrypt from 'bcryptjs';
 import { Schema, model } from 'mongoose';
+import config from '../../config';
 import { EGender, ERole, EStatus } from './user.enum';
 import { IUser, UserModel } from './user.interface';
 
@@ -16,6 +18,7 @@ const userSchema = new Schema<IUser>(
     password: {
       type: String,
       required: true,
+      select: false, // Don't include password in queries by default
     },
     role: {
       type: String,
@@ -66,4 +69,30 @@ const userSchema = new Schema<IUser>(
     },
   }
 );
+
+// Pre-save middleware to hash password before saving
+userSchema.pre('save', async function () {
+  // Only hash the password if it has been modified (or is new)
+  if (!this.isModified('password')) {
+    return;
+  }
+
+  const saltRounds = Number(config.bycrypt_salt_rounds) || 10;
+  this.password = await bcrypt.hash(this.password, saltRounds);
+});
+
+// Method to compare password for login
+userSchema.methods.comparePassword = async function (
+  candidatePassword: string
+): Promise<boolean> {
+  return await bcrypt.compare(candidatePassword, this.password);
+};
+
+// Remove password from JSON response
+userSchema.methods.toJSON = function () {
+  const obj = this.toObject();
+  delete obj.password;
+  return obj;
+};
+
 export const User = model<IUser, UserModel>('User', userSchema);

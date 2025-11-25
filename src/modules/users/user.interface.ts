@@ -18,4 +18,9 @@ export type IUser = {
   updatedAt?: Date;
   deletedAt?: Date;
 };
-export type UserModel = Model<IUser, Record<string, unknown>>;
+
+export type IUserMethods = {
+  comparePassword(candidatePassword: string): Promise<boolean>;
+};
+
+export type UserModel = Model<IUser, Record<string, unknown>, IUserMethods>;

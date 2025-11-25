@@ -1,4 +1,5 @@
 import { Server } from 'http';
+import mongoose from 'mongoose';
 import app from './app';
 import config from './config';
 import { errorlogger, logger } from './shared/logger';
@@ -11,6 +12,12 @@ import { errorlogger, logger } from './shared/logger';
  * When the server receives a SIGTERM signal, it will exit gracefully.
  */
 async function bootstrap() {
+  // Connect to MongoDB
+  if (config.database_url) {
+    await mongoose.connect(config.database_url);
+    logger.info('MongoDB connected successfully');
+  }
+
   const server: Server = app.listen(config.port, () => {
     logger.info(`Server running on port ${config.port}`);
   });
