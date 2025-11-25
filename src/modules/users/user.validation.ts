@@ -5,11 +5,6 @@ const bdPhoneRegex = /^(?:\+?88)?01[0-9]{9}$/;
 
 export const createUserZodSchema = z.object({
   body: z.object({
-    _id: z.string({
-      required_error: '_id is required',
-      invalid_type_error: '_id must be a string',
-    }),
-
     name: z
       .string({
         required_error: 'Name is required',
