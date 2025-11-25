@@ -15,8 +15,13 @@ const getUsers = async (): Promise<IUser[] | null> => {
   const result = await User.find({ status: EStatus.ACTIVE });
   return result;
 };
+const getUser = async (id: string): Promise<IUser | null> => {
+  const result = await User.findById(id);
+  return result;
+};
 
 export const UserService = {
   createUser,
   getUsers,
+  getUser,
 };
