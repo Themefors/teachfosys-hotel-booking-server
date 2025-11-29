@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
+import ApiError from '../../../errors/ApiError';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import { LoginService } from './login.service';
@@ -28,6 +29,29 @@ const login = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getMe = catchAsync(async (req: Request, res: Response) => {
+  // auth middleware already did:
+  //   const token = req.headers.authorization;
+  //   const verifiedUser = jwtHelpers.verifyToken(...)
+  //   req.user = verifiedUser;
+
+  const currentUser = req.user as any;
+
+  if (!currentUser) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized');
+  }
+
+  const user = await LoginService.getMe(currentUser.userId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Current user fetched successfully',
+    data: user,
+  });
+});
+
 export const LoginController = {
   login,
+  getMe,
 };

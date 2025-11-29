@@ -68,6 +68,17 @@ const login = async (payload: ILoginPayload): Promise<ILoginResponse> => {
   };
 };
 
+const getMe = async (userId: string) => {
+  const user = await User.findById(userId).select('-password'); // don't expose password/hash
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  return user;
+};
+
 export const LoginService = {
   login,
+  getMe,
 };
