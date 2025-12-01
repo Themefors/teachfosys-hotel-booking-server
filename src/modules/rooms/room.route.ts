@@ -20,4 +20,10 @@ router.patch(
   RoomController.updateRoom
 );
 
+router.delete(
+  '/:roomId',
+  auth(ENUM_USER_ROLE.ADMIN),
+  RoomController.deleteRoom
+);
+
 export const RoomRoutes = router;

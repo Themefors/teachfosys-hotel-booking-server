@@ -115,9 +115,20 @@ const updateRoom = async (
   return room;
 };
 
+const deleteRoom = async (roomId: string): Promise<IRoom | null> => {
+  const room = await Room.findByIdAndDelete(roomId);
+
+  if (!room) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Room not found');
+  }
+
+  return room;
+};
+
 export const RoomService = {
+  createRoom,
   getAllRooms,
   getSingleRoom,
-  createRoom,
   updateRoom,
+  deleteRoom,
 };
