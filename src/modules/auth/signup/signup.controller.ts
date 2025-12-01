@@ -28,6 +28,30 @@ const signup = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const sendOtp = catchAsync(async (req: Request, res: Response) => {
+  await SignupService.sendOtp(req.body);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'OTP Sent Successfully',
+    data: null,
+  });
+});
+
+const verifyOtp = catchAsync(async (req: Request, res: Response) => {
+  await SignupService.verifyOtp(req.body);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'OTP Verified Successfully',
+    data: null,
+  });
+});
+
 export const SignupController = {
   signup,
+  sendOtp,
+  verifyOtp,
 };

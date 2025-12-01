@@ -11,4 +11,7 @@ router.post(
   SignupController.signup
 );
 
+router.post('/send-otp', SignupController.sendOtp);
+router.post('/verify-otp', SignupController.verifyOtp);
+
 export const SignupRoutes = router;

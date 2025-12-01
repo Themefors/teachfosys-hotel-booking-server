@@ -104,7 +104,35 @@ const sendOtp = async ({ email, name }: Pick<IUser, 'email' | 'name'>) => {
   await emailService.sendOtpEmail(email, name, otp);
 };
 
+const verifyOtp = async ({ email, otp }: { email: string; otp: string }) => {
+  const existingUser = await User.findOne({ email });
+  if (!existingUser) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  if (existingUser.status === EStatus.ACTIVE) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'User is already verified');
+  }
+
+  const redisKey = `otp:${email}`;
+  const storedOtp = await getRedisClient().get(redisKey);
+
+  if (!storedOtp || storedOtp !== otp) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid or expired OTP');
+  }
+
+  Promise.all([
+    await User.findOneAndUpdate(
+      { email },
+      { isVerified: true },
+      { runValidators: true }
+    ),
+    await getRedisClient().del([redisKey]),
+  ]);
+};
+
 export const SignupService = {
   signup,
   sendOtp,
+  verifyOtp,
 };
