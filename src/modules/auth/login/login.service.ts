@@ -68,17 +68,18 @@ const login = async (payload: ILoginPayload): Promise<ILoginResponse> => {
   };
 };
 
-const getMe = async (userId: string) => {
-  const user = await User.findById(userId).select('-password'); // don't expose password/hash
-
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+const getMyBookings = async (userId: string) => {
+  if (!userId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'User id is required');
   }
 
-  return user;
+  // const bookings = await Booking.find({ user: userId }).sort({ createdAt: -1 });
+  const bookings = {};
+
+  return bookings;
 };
 
 export const LoginService = {
   login,
-  getMe,
+  getMyBookings,
 };
