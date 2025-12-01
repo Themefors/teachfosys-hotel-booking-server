@@ -45,6 +45,18 @@ const getRooms = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getRoomById = catchAsync(async (req: Request, res: Response) => {
+  const room = await RoomService.getSingleRoom(req.params.roomId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Room retrieved successfully',
+    data: room,
+  });
+});
+
 export const RoomController = {
   getRooms,
+  getRoomById,
 };

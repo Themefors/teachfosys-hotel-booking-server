@@ -1,5 +1,7 @@
 // src/app/modules/room/room.service.ts
+import httpStatus from 'http-status';
 import { SortOrder } from 'mongoose';
+import ApiError from '../../errors/ApiError';
 import { IOptions, paginationHelpers } from '../../helpers/paginationHelper';
 import type { IRoom, IRoomFilters } from './room.interface';
 import { Room } from './room.model';
@@ -81,6 +83,17 @@ const getAllRooms = async (
   };
 };
 
+const getSingleRoom = async (roomId: string): Promise<IRoom> => {
+  const room = await Room.findById(roomId);
+
+  if (!room) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Room not found');
+  }
+
+  return room;
+};
+
 export const RoomService = {
   getAllRooms,
+  getSingleRoom,
 };
