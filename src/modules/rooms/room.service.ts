@@ -99,8 +99,25 @@ const createRoom = async (payload: IRoom): Promise<IRoom> => {
   return room;
 };
 
+const updateRoom = async (
+  roomId: string,
+  payload: Partial<IRoom>
+): Promise<IRoom> => {
+  const room = await Room.findByIdAndUpdate(roomId, payload, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!room) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Room not found');
+  }
+
+  return room;
+};
+
 export const RoomService = {
   getAllRooms,
   getSingleRoom,
   createRoom,
+  updateRoom,
 };
