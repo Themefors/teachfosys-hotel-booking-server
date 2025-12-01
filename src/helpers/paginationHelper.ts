@@ -1,4 +1,4 @@
-type IOptions = {
+export type IOptions = {
   page?: number;
   limit?: number;
   sortBy?: string;
@@ -13,16 +13,6 @@ type IOptionsResult = {
   sortOrder: string;
 };
 
-/**
- * Calculate pagination options from given input options.
- *
- * @param {IOptions} options - Pagination options.
- * @property {number} [options.page=1] - Page number.
- * @property {number} [options.limit=10] - Number of items per page.
- * @property {string} [options.sortBy='createdAt'] - Field name to sort by.
- * @property {string} [options.sortOrder='desc'] - Sort order.
- * @returns {IOptionsResult} - Calculated pagination options.
- */
 const calculatePagination = (options: IOptions): IOptionsResult => {
   const page = Number(options.page || 1);
   const limit = Number(options.limit || 10);

@@ -25,3 +25,11 @@ export interface IRoom {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface IRoomFilters {
+  category?: string; // type
+  minCapacity?: number; // minimum person_num
+  maxCapacity?: number; // maximum person_num
+  startDate?: string; // desired start date (ISO string)
+  endDate?: string; // desired end date   (ISO string)
+}
