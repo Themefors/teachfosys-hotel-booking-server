@@ -2,6 +2,7 @@ import { Server } from 'http';
 import mongoose from 'mongoose';
 import app from './app';
 import config from './config';
+import connectRedis from './config/redis';
 import { errorlogger, logger } from './shared/logger';
 
 /**
@@ -12,6 +13,9 @@ import { errorlogger, logger } from './shared/logger';
  * When the server receives a SIGTERM signal, it will exit gracefully.
  */
 async function bootstrap() {
+  // Connect to Redis
+  await connectRedis();
+
   // Connect to MongoDB
   if (config.database_url) {
     await mongoose.connect(config.database_url);
