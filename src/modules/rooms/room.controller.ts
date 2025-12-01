@@ -56,7 +56,21 @@ const getRoomById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const createRoom = catchAsync(async (req: Request, res: Response) => {
+  const roomData = req.body;
+
+  const room = await RoomService.createRoom(roomData);
+
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: 'Room created successfully',
+    data: room,
+  });
+});
+
 export const RoomController = {
   getRooms,
   getRoomById,
+  createRoom,
 };

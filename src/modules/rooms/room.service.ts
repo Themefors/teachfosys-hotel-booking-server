@@ -93,7 +93,14 @@ const getSingleRoom = async (roomId: string): Promise<IRoom> => {
   return room;
 };
 
+const createRoom = async (payload: IRoom): Promise<IRoom> => {
+  // You can omit createdAt/updatedAt; timestamps option will handle them
+  const room = await Room.create(payload);
+  return room;
+};
+
 export const RoomService = {
   getAllRooms,
   getSingleRoom,
+  createRoom,
 };
