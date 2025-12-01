@@ -1,19 +1,17 @@
 import httpStatus from 'http-status';
 import config from '../../../config';
+import { getRedisClient } from '../../../config/redis';
+import { OTP_EXPIRY_TIME } from '../../../constants/redis';
 import ApiError from '../../../errors/ApiError';
+import generateOtp from '../../../helpers/generateOtp';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import { emailService } from '../../../shared/emailService';
 import { logger } from '../../../shared/logger';
+import { EStatus } from '../../users/user.enum';
+import { IUser } from '../../users/user.interface';
 import { User } from '../../users/user.model';
 import { TSignupPayload, TSignupResponse } from './signup.interface';
 
-/**
- * Creates a new user and returns the created user populated with their academic faculty.
- * @param {TSignupPayload} payload - The user data to be created.
- * @returns {Promise<TSignupResponse>} The created user populated with their academic faculty.
- * @throws {ApiError} If user already exists with this email.
- * @throws {ApiError} If failed to create user.
- */
 const signup = async (payload: TSignupPayload): Promise<TSignupResponse> => {
   const { email, name, password, phone, gender, address, role, dob } = payload;
 
@@ -82,6 +80,31 @@ const signup = async (payload: TSignupPayload): Promise<TSignupResponse> => {
   };
 };
 
+const sendOtp = async ({ email, name }: Pick<IUser, 'email' | 'name'>) => {
+  const existingUser = await User.findOne({ email });
+  if (!existingUser) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  if (existingUser.status === EStatus.ACTIVE) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'User is already verified');
+  }
+
+  const otp = generateOtp();
+
+  const redisKey = `otp:${email}`;
+
+  await getRedisClient().set(redisKey, otp, {
+    expiration: {
+      type: 'EX',
+      value: OTP_EXPIRY_TIME,
+    },
+  });
+
+  await emailService.sendOtpEmail(email, name, otp);
+};
+
 export const SignupService = {
   signup,
+  sendOtp,
 };
