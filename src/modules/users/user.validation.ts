@@ -64,6 +64,20 @@ export const createUserZodSchema = z.object({
   }),
 });
 
+export const getUsersQuerySchema = z.object({
+  query: z.object({
+    searchTerm: z.string().optional(),
+    role: z.nativeEnum(ERole).optional(),
+    gender: z.nativeEnum(EGender).optional(),
+    status: z.nativeEnum(EStatus).optional(),
+    page: z.string().optional(),
+    limit: z.string().optional(),
+    sortBy: z.string().optional(),
+    sortOrder: z.enum(['asc', 'desc']).optional(),
+  }),
+});
+
 export const UserValidation = {
   createUserZodSchema,
+  getUsersQuerySchema,
 };

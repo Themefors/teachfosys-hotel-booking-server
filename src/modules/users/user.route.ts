@@ -10,6 +10,10 @@ router.post(
   UserController.createUser
 );
 
-router.get('/', UserController.getUsers);
+router.get(
+  '/',
+  validateRequest(UserValidation.getUsersQuerySchema),
+  UserController.getUsers
+);
 
 export const UserRoutes = router;
