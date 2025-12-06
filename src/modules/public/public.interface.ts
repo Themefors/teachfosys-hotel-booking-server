@@ -54,3 +54,14 @@ export interface IGallery {
   updatedAt?: Date;
   deletedAt?: Date;
 }
+
+export interface IBlog {
+  _id: string;
+  image: string;
+  title: string;
+  content: string;
+  category: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+}
