@@ -1,5 +1,5 @@
 import httpStatus from 'http-status';
-import { SortOrder } from 'mongoose';
+import { isValidObjectId, SortOrder } from 'mongoose';
 import { userSearchableFields } from '../../constants/user';
 import ApiError from '../../errors/ApiError';
 import { IOptions, paginationHelpers } from '../../helpers/paginationHelper';
@@ -94,8 +94,17 @@ const getUsers = async (
   };
 };
 
-const getUser = async (id: string): Promise<IUser | null> => {
+const getUser = async (id: string): Promise<IUser> => {
+  if (!isValidObjectId(id)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid user ID');
+  }
+
   const result = await User.findById(id);
+
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
   return result;
 };
 

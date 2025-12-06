@@ -19,4 +19,11 @@ router.get(
   UserController.getUsers
 );
 
+router.get(
+  '/:id',
+  auth(ERole.ADMIN),
+  validateRequest(UserValidation.getUserParamSchema),
+  UserController.getUser
+);
+
 export const UserRoutes = router;

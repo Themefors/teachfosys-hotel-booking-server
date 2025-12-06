@@ -3,7 +3,7 @@ import { EGender, ERole, EStatus } from './user.enum';
 
 const bdPhoneRegex = /^(?:\+?88)?01[0-9]{9}$/;
 
-export const createUserZodSchema = z.object({
+const createUserZodSchema = z.object({
   body: z.object({
     name: z
       .string({
@@ -64,7 +64,7 @@ export const createUserZodSchema = z.object({
   }),
 });
 
-export const getUsersQuerySchema = z.object({
+const getUsersQuerySchema = z.object({
   query: z.object({
     searchTerm: z.string().optional(),
     role: z.nativeEnum(ERole).optional(),
@@ -77,7 +77,16 @@ export const getUsersQuerySchema = z.object({
   }),
 });
 
+const getUserParamSchema = z.object({
+  params: z.object({
+    id: z.string({
+      required_error: 'User ID is required',
+    }),
+  }),
+});
+
 export const UserValidation = {
   createUserZodSchema,
   getUsersQuerySchema,
+  getUserParamSchema,
 };
