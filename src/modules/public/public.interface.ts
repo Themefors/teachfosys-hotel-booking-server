@@ -33,3 +33,14 @@ export interface ISubscribe {
   updatedAt?: Date;
   deletedAt?: Date;
 }
+
+export interface IContact {
+  _id: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+}

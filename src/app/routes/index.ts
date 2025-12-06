@@ -3,6 +3,7 @@ import { LoginRoutes } from '../../modules/auth/login/login.route';
 import { LogoutRoutes } from '../../modules/auth/logout/logout.route';
 import { SignupRoutes } from '../../modules/auth/signup/signup.route';
 import { BannerRoutes } from '../../modules/public/routes/banner.route';
+import { ContactRoutes } from '../../modules/public/routes/contact.route';
 import { GeneralInfoRoutes } from '../../modules/public/routes/general-info.route';
 import { SubscribeRoutes } from '../../modules/public/routes/subscribe.route';
 import { TestimonialRoutes } from '../../modules/public/routes/testimonial.route';
@@ -18,6 +19,7 @@ const moduleRoutes = [
   { path: '/rooms', route: RoomRoutes },
   { path: '/banners', route: BannerRoutes },
   { path: '/subscribe', route: SubscribeRoutes },
+  { path: '/contact', route: ContactRoutes },
   { path: '/general-info', route: GeneralInfoRoutes },
   { path: '/testimonials', route: TestimonialRoutes },
 ];
