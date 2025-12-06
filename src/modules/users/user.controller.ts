@@ -41,8 +41,8 @@ const getUsers = catchAsync(
 
 const getUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { id } = req.params;
-    const result = await UserService.getUser(id);
+    const { userId } = req.params;
+    const result = await UserService.getUser(userId);
 
     sendResponse<IUser | null>(res, {
       statusCode: httpStatus.OK,
@@ -82,9 +82,33 @@ const updateUser = catchAsync(
   }
 );
 
+const deleteUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { userId } = req.params;
+    const currentUser = req.user as any;
+
+    if (!currentUser) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized');
+    }
+
+    const currentUserId = currentUser.userId;
+    const currentUserRole = currentUser.role;
+
+    await UserService.deleteUser(userId, currentUserId, currentUserRole);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'User deleted successfully.',
+      data: null,
+    });
+  }
+);
+
 export const UserController = {
   createUser,
   getUsers,
   getUser,
   updateUser,
+  deleteUser,
 };

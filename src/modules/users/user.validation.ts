@@ -127,9 +127,18 @@ const updateUserZodSchema = z.object({
   }),
 });
 
+const deleteUserParamSchema = z.object({
+  params: z.object({
+    userId: z.string({
+      required_error: 'User ID is required',
+    }),
+  }),
+});
+
 export const UserValidation = {
   createUserZodSchema,
   getUsersQuerySchema,
   getUserParamSchema,
   updateUserZodSchema,
+  deleteUserParamSchema,
 };

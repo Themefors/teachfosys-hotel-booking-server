@@ -21,7 +21,7 @@ router.get(
 );
 
 router.get(
-  '/:id',
+  '/:userId',
   auth(ERole.ADMIN, ERole.MANAGER, ERole.ACCOUNTS, ERole.STUFF),
   validateRequest(UserValidation.getUserParamSchema),
   UserController.getUser
@@ -32,6 +32,13 @@ router.patch(
   auth(ERole.ADMIN, ERole.MANAGER),
   validateRequest(UserValidation.updateUserZodSchema),
   UserController.updateUser
+);
+
+router.delete(
+  '/:userId',
+  auth(ERole.ADMIN, ERole.MANAGER),
+  validateRequest(UserValidation.deleteUserParamSchema),
+  UserController.deleteUser
 );
 
 export const UserRoutes = router;

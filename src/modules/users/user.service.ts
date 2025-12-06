@@ -180,9 +180,71 @@ const updateUser = async (
   return result;
 };
 
+const deleteUser = async (
+  userId: string,
+  currentUserId: string,
+  currentUserRole: string
+): Promise<void> => {
+  // Validate MongoDB ObjectId
+  if (!isValidObjectId(userId)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid user ID');
+  }
+
+  // Prevent self-deletion
+  if (userId === currentUserId) {
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      'You cannot delete your own account'
+    );
+  }
+
+  // Get target user
+  const targetUser = await User.findById(userId);
+
+  if (!targetUser) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  // Check if already deleted
+  if (targetUser.status === EStatus.DELETED) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'User is already deleted');
+  }
+
+  // Manager role restrictions
+  if (currentUserRole === ERole.MANAGER) {
+    // Managers can only delete regular users
+    if (targetUser.role !== ERole.USER) {
+      throw new ApiError(
+        httpStatus.FORBIDDEN,
+        'Managers can only delete regular users'
+      );
+    }
+  }
+
+  // Soft delete: Set status to DELETED and deletedAt timestamp
+  const result = await User.findByIdAndUpdate(
+    userId,
+    {
+      $set: {
+        status: EStatus.DELETED,
+        deletedAt: new Date(),
+      },
+    },
+    { new: true }
+  );
+
+  if (!result) {
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Failed to delete user'
+    );
+  }
+};
+
 export const UserService = {
   createUser,
   getUsers,
   getUser,
   updateUser,
+  deleteUser,
 };
