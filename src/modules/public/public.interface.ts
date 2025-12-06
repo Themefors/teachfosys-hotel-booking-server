@@ -15,3 +15,12 @@ export interface ITestimonial {
   name: string;
   team?: string | null;
 }
+
+export interface IBanner {
+  picture: string;
+  title: string;
+  subtitle: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+}
