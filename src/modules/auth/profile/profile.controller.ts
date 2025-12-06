@@ -1,0 +1,61 @@
+import { Request, Response } from 'express';
+import httpStatus from 'http-status';
+import ApiError from '../../../errors/ApiError';
+import catchAsync from '../../../shared/catchAsync';
+import sendResponse from '../../../shared/sendResponse';
+import { ProfileService } from './profile.service';
+
+const editMe = catchAsync(async (req: Request, res: Response) => {
+  const currentUser = req.user as any;
+
+  if (!currentUser) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized');
+  }
+
+  const userId = currentUser.userId;
+
+  if (!userId) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'User id not found in token');
+  }
+
+  const updateData = req.body;
+
+  const result = await ProfileService.editMe(userId, updateData);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Profile updated successfully',
+    data: result,
+  });
+});
+
+const setPassword = catchAsync(async (req: Request, res: Response) => {
+  const currentUser = req.user as any;
+
+  if (!currentUser) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized');
+  }
+
+  const userId = currentUser.userId;
+
+  if (!userId) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'User id not found in token');
+  }
+
+  const { old_pass, new_pass } = req.body;
+
+  await ProfileService.setPassword(userId, old_pass, new_pass);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Password changed successfully',
+    data: null,
+  });
+});
+
+export const ProfileController = {
+  editMe,
+  setPassword,
+};
