@@ -1,6 +1,5 @@
 export interface IGeneralInfo {
-  _id?: string;
-  logo?: string;
+  logo?: string | null;
   location: string;
   description: string;
   socials: Record<string, string>;
@@ -8,4 +7,11 @@ export interface IGeneralInfo {
   email: string;
   phone: string;
   copy_right: string;
+}
+
+export interface ITestimonial {
+  rating: number;
+  review: string;
+  name: string;
+  team?: string | null;
 }
