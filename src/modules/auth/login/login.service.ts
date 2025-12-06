@@ -3,6 +3,7 @@ import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import { EStatus } from '../../users/user.enum';
+import { IUser } from '../../users/user.interface';
 import { User } from '../../users/user.model';
 import { ILoginPayload, ILoginResponse } from './login.interface';
 
@@ -79,7 +80,48 @@ const getMyBookings = async (userId: string) => {
   return bookings;
 };
 
+const editMe = async (
+  userId: string,
+  payload: Partial<IUser>
+): Promise<IUser> => {
+  // Check if user exists
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  // Check if user is active
+  if (user.status === EStatus.SUSPENDED) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Your account has been suspended');
+  }
+
+  if (user.status === EStatus.DELETED) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Your account has been deleted');
+  }
+
+  // Explicitly prevent updating sensitive fields
+  const { email, password, role, ...allowedUpdates } = payload as any;
+
+  // Update user with allowed fields only
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { $set: allowedUpdates },
+    { new: true, runValidators: true }
+  );
+
+  if (!updatedUser) {
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Failed to update user'
+    );
+  }
+
+  return updatedUser;
+};
+
 export const LoginService = {
   login,
   getMyBookings,
+  editMe,
 };

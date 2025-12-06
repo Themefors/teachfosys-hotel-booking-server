@@ -17,4 +17,5 @@ export enum ERole {
   MANAGER = 'manager',
   STUFF = 'stuff',
   ACCOUNTS = 'accounts',
+  USER = 'user',
 }

@@ -42,7 +42,8 @@ const getMyBookings = catchAsync(async (req: Request, res: Response) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'User id not found in token');
   }
 
-  const bookings = await BookingService.getMyBookings(userId);
+  // const bookings = await BookingService.getMyBookings(userId);
+  const bookings = {};
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -52,7 +53,33 @@ const getMyBookings = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const editMe = catchAsync(async (req: Request, res: Response) => {
+  const currentUser = req.user as any;
+
+  if (!currentUser) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized');
+  }
+
+  const userId = currentUser.userId;
+
+  if (!userId) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'User id not found in token');
+  }
+
+  const updateData = req.body;
+
+  const result = await LoginService.editMe(userId, updateData);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Profile updated successfully',
+    data: result,
+  });
+});
+
 export const LoginController = {
   login,
   getMyBookings,
+  editMe,
 };
