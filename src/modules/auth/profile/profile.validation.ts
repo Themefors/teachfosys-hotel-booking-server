@@ -51,9 +51,20 @@ const verifyResetPasswordValidationSchema = z.object({
   }),
 });
 
+const resetPasswordValidationSchema = z.object({
+  body: z.object({
+    new_pass: z
+      .string({
+        required_error: 'New password is required',
+      })
+      .min(6, { message: 'New password must be at least 6 characters' }),
+  }),
+});
+
 export const ProfileValidation = {
   editMeValidationSchema,
   setPasswordValidationSchema,
   forgetPasswordValidationSchema,
   verifyResetPasswordValidationSchema,
+  resetPasswordValidationSchema,
 };

@@ -180,9 +180,35 @@ const verifyResetPassword = async (
   };
 };
 
+const resetPassword = async (
+  userId: string,
+  newPassword: string
+): Promise<void> => {
+  // Get user with password
+  const user = await User.findById(userId).select('+password');
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  // Check if user is active
+  if (user.status === EStatus.SUSPENDED) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Your account has been suspended');
+  }
+
+  if (user.status === EStatus.DELETED) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Your account has been deleted');
+  }
+
+  // Update password - the pre-save hook will hash it
+  user.password = newPassword;
+  await user.save();
+};
+
 export const ProfileService = {
   editMe,
   setPassword,
   forgetPassword,
   verifyResetPassword,
+  resetPassword,
 };

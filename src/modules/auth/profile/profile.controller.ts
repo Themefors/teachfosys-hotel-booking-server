@@ -95,9 +95,35 @@ const verifyResetPassword = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const resetPassword = catchAsync(async (req: Request, res: Response) => {
+  const currentUser = req.user as any;
+
+  if (!currentUser) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized');
+  }
+
+  const userId = currentUser.userId;
+
+  if (!userId) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'User id not found in token');
+  }
+
+  const { new_pass } = req.body;
+
+  await ProfileService.resetPassword(userId, new_pass);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Password reset successfully',
+    data: null,
+  });
+});
+
 export const ProfileController = {
   editMe,
   setPassword,
   forgetPassword,
   verifyResetPassword,
+  resetPassword,
 };

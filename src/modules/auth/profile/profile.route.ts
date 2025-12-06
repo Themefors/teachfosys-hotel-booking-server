@@ -33,4 +33,11 @@ router.post(
   ProfileController.verifyResetPassword
 );
 
+router.patch(
+  '/reset-password',
+  auth(ERole.USER, ERole.ADMIN),
+  validateRequest(ProfileValidation.resetPasswordValidationSchema),
+  ProfileController.resetPassword
+);
+
 export const ProfileRoutes = router;
