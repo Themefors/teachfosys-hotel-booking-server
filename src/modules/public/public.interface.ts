@@ -44,3 +44,13 @@ export interface IContact {
   updatedAt?: Date;
   deletedAt?: Date;
 }
+
+export interface IGallery {
+  _id: string;
+  image: string;
+  caption: string;
+  category: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+}

@@ -9,6 +9,7 @@ import { SubscribeRoutes } from '../../modules/public/routes/subscribe.route';
 import { TestimonialRoutes } from '../../modules/public/routes/testimonial.route';
 import { RoomRoutes } from '../../modules/rooms/room.route';
 import { UserRoutes } from '../../modules/users/user.route';
+import { GalleryRoutes } from '../../modules/public/routes/gallery.route';
 const router = express.Router();
 
 const moduleRoutes = [
@@ -20,6 +21,7 @@ const moduleRoutes = [
   { path: '/banners', route: BannerRoutes },
   { path: '/subscribe', route: SubscribeRoutes },
   { path: '/contact', route: ContactRoutes },
+  { path: '/gallery', route: GalleryRoutes },
   { path: '/general-info', route: GeneralInfoRoutes },
   { path: '/testimonials', route: TestimonialRoutes },
 ];
