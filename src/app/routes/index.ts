@@ -1,6 +1,7 @@
 import express from 'express';
 import { LoginRoutes } from '../../modules/auth/login/login.route';
 import { LogoutRoutes } from '../../modules/auth/logout/logout.route';
+import { ProfileRoutes } from '../../modules/auth/profile/profile.route';
 import { SignupRoutes } from '../../modules/auth/signup/signup.route';
 import { RoomRoutes } from '../../modules/rooms/room.route';
 import { UserRoutes } from '../../modules/users/user.route';
@@ -11,6 +12,7 @@ const moduleRoutes = [
   { path: '/auth/signup', route: SignupRoutes },
   { path: '/auth/login', route: LoginRoutes },
   { path: '/auth/logout', route: LogoutRoutes },
+  { path: '/auth/profile', route: ProfileRoutes },
   { path: '/rooms', route: RoomRoutes },
 ];
 
