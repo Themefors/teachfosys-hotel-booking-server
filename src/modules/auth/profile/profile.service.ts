@@ -1,8 +1,10 @@
 import httpStatus from 'http-status';
+import config from '../../../config';
 import { getRedisClient } from '../../../config/redis';
 import { OTP_EXPIRY_TIME } from '../../../constants/redis';
 import ApiError from '../../../errors/ApiError';
 import generateOtp from '../../../helpers/generateOtp';
+import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import { emailService } from '../../../shared/emailService';
 import { EStatus } from '../../users/user.enum';
 import { IUser } from '../../users/user.interface';
@@ -121,8 +123,66 @@ const forgetPassword = async (email: string): Promise<void> => {
   await emailService.sendOtpEmail(email, user.name, otp);
 };
 
+const verifyResetPassword = async (
+  email: string,
+  otp: string
+): Promise<{ resetToken: string; user: IUser }> => {
+  // Get OTP from Redis
+  const redisClient = getRedisClient();
+  const redisKey = `otp:${email}`;
+
+  const storedOtp = await redisClient.get(redisKey);
+
+  if (!storedOtp) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'OTP has expired or is invalid');
+  }
+
+  // Verify OTP
+  if (storedOtp !== otp) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid OTP');
+  }
+
+  // Get user
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  // Check if user is active
+  if (user.status === EStatus.SUSPENDED) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Your account has been suspended');
+  }
+
+  if (user.status === EStatus.DELETED) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Your account has been deleted');
+  }
+
+  // Delete OTP from Redis immediately after successful verification
+  await redisClient.del(redisKey);
+
+  // Generate reset token with 5 minutes expiration
+  const jwtPayload = {
+    userId: user._id,
+    email: user.email,
+    role: user.role,
+  };
+
+  const resetToken = jwtHelpers.createToken(
+    jwtPayload,
+    config.jwt.secret as string,
+    config.jwt.expires_in as string // 5 minutes expiration
+  );
+
+  return {
+    resetToken,
+    user,
+  };
+};
+
 export const ProfileService = {
   editMe,
   setPassword,
   forgetPassword,
+  verifyResetPassword,
 };

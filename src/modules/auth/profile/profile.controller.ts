@@ -68,8 +68,36 @@ const forgetPassword = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const verifyResetPassword = catchAsync(async (req: Request, res: Response) => {
+  const { email, otp } = req.body;
+
+  const result = await ProfileService.verifyResetPassword(email, otp);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'OTP verified successfully',
+    data: {
+      resetToken: result.resetToken,
+      user: {
+        _id: result.user._id,
+        name: result.user.name,
+        email: result.user.email,
+        role: result.user.role,
+        phone: result.user.phone,
+        dob: result.user.dob,
+        gender: result.user.gender,
+        address: result.user.address,
+        picture: result.user.picture,
+        status: result.user.status,
+      },
+    },
+  });
+});
+
 export const ProfileController = {
   editMe,
   setPassword,
   forgetPassword,
+  verifyResetPassword,
 };

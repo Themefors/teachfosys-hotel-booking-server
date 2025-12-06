@@ -36,8 +36,24 @@ const forgetPasswordValidationSchema = z.object({
   }),
 });
 
+const verifyResetPasswordValidationSchema = z.object({
+  body: z.object({
+    email: z
+      .string({
+        required_error: 'Email is required',
+      })
+      .email('Invalid email format'),
+    otp: z
+      .string({
+        required_error: 'OTP is required',
+      })
+      .length(6, 'OTP must be 6 digits'),
+  }),
+});
+
 export const ProfileValidation = {
   editMeValidationSchema,
   setPasswordValidationSchema,
   forgetPasswordValidationSchema,
+  verifyResetPasswordValidationSchema,
 };

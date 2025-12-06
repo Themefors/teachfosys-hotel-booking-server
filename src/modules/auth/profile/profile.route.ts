@@ -27,4 +27,10 @@ router.post(
   ProfileController.forgetPassword
 );
 
+router.post(
+  '/reset-password/verify',
+  validateRequest(ProfileValidation.verifyResetPasswordValidationSchema),
+  ProfileController.verifyResetPassword
+);
+
 export const ProfileRoutes = router;
