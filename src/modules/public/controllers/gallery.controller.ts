@@ -1,0 +1,105 @@
+import { NextFunction, Request, Response } from 'express';
+import httpStatus from 'http-status';
+import catchAsync from '../../../shared/catchAsync';
+import sendResponse from '../../../shared/sendResponse';
+import { IGallery } from '../public.interface';
+import { GalleryService } from '../services/gallery.service';
+
+const createGallery = catchAsync(
+  async (
+    req: Request<any, any, IGallery>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const result = await GalleryService.createGallery(req.body);
+
+    sendResponse<IGallery>(res, {
+      statusCode: httpStatus.CREATED,
+      success: true,
+      message: 'Gallery item created successfully.',
+      data: result,
+    });
+  }
+);
+
+const getGalleries = catchAsync(
+  async (
+    req: Request<any, any, IGallery[]>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const result = await GalleryService.getGalleries();
+
+    sendResponse<IGallery[]>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Gallery items fetched successfully.',
+      data: result,
+    });
+  }
+);
+
+const getGallery = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const result = await GalleryService.getGallery(id);
+
+    sendResponse<IGallery | null>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Gallery item fetched successfully.',
+      data: result,
+    });
+  }
+);
+
+const getGalleryByCategory = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { category } = req.params;
+    const result = await GalleryService.getGalleryByCategory(category);
+
+    sendResponse<IGallery[]>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Gallery items by category fetched successfully.',
+      data: result,
+    });
+  }
+);
+
+const updateGallery = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const result = await GalleryService.updateGallery(id, req.body);
+
+    sendResponse<IGallery | null>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Gallery item updated successfully.',
+      data: result,
+    });
+  }
+);
+
+const deleteGallery = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const result = await GalleryService.deleteGallery(id);
+
+    sendResponse<IGallery | null>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Gallery item deleted successfully.',
+      data: result,
+    });
+  }
+);
+
+export const GalleryController = {
+  createGallery,
+  getGalleries,
+  getGallery,
+  getGalleryByCategory,
+  updateGallery,
+  deleteGallery,
+};
