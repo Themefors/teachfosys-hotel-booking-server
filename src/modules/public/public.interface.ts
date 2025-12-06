@@ -1,6 +1,5 @@
 export interface IGeneralInfo {
-  _id?: string;
-  logo?: string;
+  logo?: string | null;
   location: string;
   description: string;
   socials: Record<string, string>;
@@ -8,4 +7,40 @@ export interface IGeneralInfo {
   email: string;
   phone: string;
   copy_right: string;
+}
+
+export interface ITestimonial {
+  rating: number;
+  review: string;
+  name: string;
+  team?: string | null;
+}
+
+export interface IBanner {
+  _id: string;
+  picture: string;
+  title: string;
+  subtitle: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+}
+
+export interface ISubscribe {
+  _id: string;
+  email: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+}
+
+export interface IContact {
+  _id: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
 }
