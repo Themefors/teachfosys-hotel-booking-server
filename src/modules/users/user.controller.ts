@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { paginationFields } from '../../constants/pagination';
 import { userFilterableFields } from '../../constants/user';
+import ApiError from '../../errors/ApiError';
 import catchAsync from '../../shared/catchAsync';
 import pick from '../../shared/pick';
 import sendResponse from '../../shared/sendResponse';
@@ -52,8 +53,38 @@ const getUser = catchAsync(
   }
 );
 
+const updateUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { userId } = req.params;
+    const updateData = req.body;
+    const currentUser = req.user as any;
+
+    if (!currentUser) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized');
+    }
+
+    const currentUserId = currentUser.userId;
+    const currentUserRole = currentUser.role;
+
+    const result = await UserService.updateUser(
+      userId,
+      currentUserId,
+      currentUserRole,
+      updateData
+    );
+
+    sendResponse<IUser>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'User updated successfully.',
+      data: result,
+    });
+  }
+);
+
 export const UserController = {
   createUser,
   getUsers,
   getUser,
+  updateUser,
 };

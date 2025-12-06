@@ -3,7 +3,7 @@ import { isValidObjectId, SortOrder } from 'mongoose';
 import { userSearchableFields } from '../../constants/user';
 import ApiError from '../../errors/ApiError';
 import { IOptions, paginationHelpers } from '../../helpers/paginationHelper';
-import { EStatus } from './user.enum';
+import { ERole, EStatus } from './user.enum';
 import { IUser } from './user.interface';
 import { User } from './user.model';
 
@@ -108,8 +108,81 @@ const getUser = async (id: string): Promise<IUser> => {
   return result;
 };
 
+const updateUser = async (
+  userId: string,
+  currentUserId: string,
+  currentUserRole: string,
+  payload: Partial<IUser>
+): Promise<IUser> => {
+  // Validate MongoDB ObjectId
+  if (!isValidObjectId(userId)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid user ID');
+  }
+
+  // Prevent self-update
+  if (userId === currentUserId) {
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      'You cannot update your own profile through this endpoint'
+    );
+  }
+
+  // Get target user
+  const targetUser = await User.findById(userId);
+
+  if (!targetUser) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  // Manager role restrictions
+  if (currentUserRole === ERole.MANAGER) {
+    // Managers can only update regular users
+    if (targetUser.role !== ERole.USER) {
+      throw new ApiError(
+        httpStatus.FORBIDDEN,
+        'Managers can only update regular users'
+      );
+    }
+
+    // Managers cannot change user role
+    if (payload.role && payload.role !== ERole.USER) {
+      throw new ApiError(
+        httpStatus.FORBIDDEN,
+        'Managers cannot change user roles'
+      );
+    }
+  }
+
+  // Explicitly prevent updating email and password
+  const { email, password, ...allowedUpdates } = payload as any;
+
+  if (email || password) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'Email and password cannot be updated through this endpoint'
+    );
+  }
+
+  // Update user
+  const result = await User.findByIdAndUpdate(
+    userId,
+    { $set: allowedUpdates },
+    { new: true, runValidators: true }
+  );
+
+  if (!result) {
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Failed to update user'
+    );
+  }
+
+  return result;
+};
+
 export const UserService = {
   createUser,
   getUsers,
   getUser,
+  updateUser,
 };

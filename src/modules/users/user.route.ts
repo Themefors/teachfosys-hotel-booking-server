@@ -15,15 +15,23 @@ router.post(
 
 router.get(
   '/',
+  auth(ERole.ADMIN, ERole.MANAGER, ERole.ACCOUNTS, ERole.STUFF),
   validateRequest(UserValidation.getUsersQuerySchema),
   UserController.getUsers
 );
 
 router.get(
   '/:id',
-  auth(ERole.ADMIN),
+  auth(ERole.ADMIN, ERole.MANAGER, ERole.ACCOUNTS, ERole.STUFF),
   validateRequest(UserValidation.getUserParamSchema),
   UserController.getUser
+);
+
+router.patch(
+  '/:userId',
+  auth(ERole.ADMIN, ERole.MANAGER),
+  validateRequest(UserValidation.updateUserZodSchema),
+  UserController.updateUser
 );
 
 export const UserRoutes = router;
