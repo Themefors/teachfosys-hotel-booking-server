@@ -17,9 +17,18 @@ export interface ITestimonial {
 }
 
 export interface IBanner {
+  _id: string;
   picture: string;
   title: string;
   subtitle: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+}
+
+export interface ISubscribe {
+  _id: string;
+  email: string;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
