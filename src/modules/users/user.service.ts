@@ -1,12 +1,23 @@
+import httpStatus from 'http-status';
 import { SortOrder } from 'mongoose';
 import { userSearchableFields } from '../../constants/user';
+import ApiError from '../../errors/ApiError';
 import { IOptions, paginationHelpers } from '../../helpers/paginationHelper';
 import { EStatus } from './user.enum';
 import { IUser } from './user.interface';
 import { User } from './user.model';
 
 const createUser = async (payload: IUser): Promise<IUser> => {
+  // Check if user already exists
+  const existingUser = await User.findOne({ email: payload.email });
+
+  if (existingUser) {
+    throw new ApiError(httpStatus.CONFLICT, 'Email already exists');
+  }
+
+  // Create user
   const result = await User.create(payload);
+
   return result;
 };
 

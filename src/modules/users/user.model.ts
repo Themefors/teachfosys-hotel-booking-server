@@ -23,7 +23,7 @@ const userSchema = new Schema<IUser>(
     role: {
       type: String,
       enum: ERole,
-      default: ERole.ADMIN,
+      default: ERole.USER,
     },
     dob: {
       type: String,
