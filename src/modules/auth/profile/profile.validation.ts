@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { EGender } from '../../users/user.enum';
 
-export const editMeValidationSchema = z.object({
+const editMeValidationSchema = z.object({
   body: z.object({
     dob: z.string().optional(),
     phone: z.string().optional(),
@@ -11,7 +11,7 @@ export const editMeValidationSchema = z.object({
   }),
 });
 
-export const setPasswordValidationSchema = z.object({
+const setPasswordValidationSchema = z.object({
   body: z.object({
     old_pass: z
       .string({
@@ -26,7 +26,18 @@ export const setPasswordValidationSchema = z.object({
   }),
 });
 
+const forgetPasswordValidationSchema = z.object({
+  body: z.object({
+    email: z
+      .string({
+        required_error: 'Email is required',
+      })
+      .email('Invalid email format'),
+  }),
+});
+
 export const ProfileValidation = {
   editMeValidationSchema,
   setPasswordValidationSchema,
+  forgetPasswordValidationSchema,
 };

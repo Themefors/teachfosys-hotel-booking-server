@@ -1,5 +1,9 @@
 import httpStatus from 'http-status';
+import { getRedisClient } from '../../../config/redis';
+import { OTP_EXPIRY_TIME } from '../../../constants/redis';
 import ApiError from '../../../errors/ApiError';
+import generateOtp from '../../../helpers/generateOtp';
+import { emailService } from '../../../shared/emailService';
 import { EStatus } from '../../users/user.enum';
 import { IUser } from '../../users/user.interface';
 import { User } from '../../users/user.model';
@@ -87,7 +91,38 @@ const setPassword = async (
   await user.save();
 };
 
+const forgetPassword = async (email: string): Promise<void> => {
+  // Check if user exists
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found with this email');
+  }
+
+  // Check if user is active
+  if (user.status === EStatus.SUSPENDED) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Your account has been suspended');
+  }
+
+  if (user.status === EStatus.DELETED) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Your account has been deleted');
+  }
+
+  // Generate 6-digit OTP
+  const otp = generateOtp(6);
+
+  // Store OTP in Redis with 5 minutes expiration (300 seconds)
+  const redisClient = getRedisClient();
+  const redisKey = `otp:${email}`;
+
+  await redisClient.set(redisKey, otp, { EX: OTP_EXPIRY_TIME });
+
+  // Send OTP via email
+  await emailService.sendOtpEmail(email, user.name, otp);
+};
+
 export const ProfileService = {
   editMe,
   setPassword,
+  forgetPassword,
 };

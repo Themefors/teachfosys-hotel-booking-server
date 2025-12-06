@@ -21,4 +21,10 @@ router.patch(
   ProfileController.setPassword
 );
 
+router.post(
+  '/forget-password',
+  validateRequest(ProfileValidation.forgetPasswordValidationSchema),
+  ProfileController.forgetPassword
+);
+
 export const ProfileRoutes = router;

@@ -55,7 +55,21 @@ const setPassword = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const forgetPassword = catchAsync(async (req: Request, res: Response) => {
+  const { email } = req.body;
+
+  await ProfileService.forgetPassword(email);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'OTP sent successfully to your email',
+    data: null,
+  });
+});
+
 export const ProfileController = {
   editMe,
   setPassword,
+  forgetPassword,
 };
