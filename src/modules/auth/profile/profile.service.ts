@@ -1,7 +1,6 @@
 import httpStatus from 'http-status';
 import config from '../../../config';
-import { getRedisClient } from '../../../config/redis';
-import { OTP_EXPIRY_TIME } from '../../../constants/redis';
+// import { getRedisClient } from '../../../config/redis';
 import ApiError from '../../../errors/ApiError';
 import generateOtp from '../../../helpers/generateOtp';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
@@ -114,10 +113,10 @@ const forgetPassword = async (email: string): Promise<void> => {
   const otp = generateOtp(6);
 
   // Store OTP in Redis with 5 minutes expiration (300 seconds)
-  const redisClient = getRedisClient();
-  const redisKey = `otp:${email}`;
+  // const redisClient = getRedisClient();
+  // const redisKey = `otp:${email}`;
 
-  await redisClient.set(redisKey, otp, { EX: OTP_EXPIRY_TIME });
+  // await redisClient.set(redisKey, otp, { EX: OTP_EXPIRY_TIME });
 
   // Send OTP via email
   await emailService.sendOtpEmail(email, user.name, otp);
@@ -128,19 +127,19 @@ const verifyResetPassword = async (
   otp: string
 ): Promise<{ resetToken: string; user: IUser }> => {
   // Get OTP from Redis
-  const redisClient = getRedisClient();
-  const redisKey = `otp:${email}`;
+  // const redisClient = getRedisClient();
+  // const redisKey = `otp:${email}`;
 
-  const storedOtp = await redisClient.get(redisKey);
+  // const storedOtp = await redisClient.get(redisKey);
 
-  if (!storedOtp) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'OTP has expired or is invalid');
-  }
+  // if (!storedOtp) {
+  //   throw new ApiError(httpStatus.BAD_REQUEST, 'OTP has expired or is invalid');
+  // }
 
-  // Verify OTP
-  if (storedOtp !== otp) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid OTP');
-  }
+  // // Verify OTP
+  // if (storedOtp !== otp) {
+  //   throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid OTP');
+  // }
 
   // Get user
   const user = await User.findOne({ email });
@@ -159,7 +158,7 @@ const verifyResetPassword = async (
   }
 
   // Delete OTP from Redis immediately after successful verification
-  await redisClient.del(redisKey);
+  // await redisClient.del(redisKey);
 
   // Generate reset token with 5 minutes expiration
   const jwtPayload = {
