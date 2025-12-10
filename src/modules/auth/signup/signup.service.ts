@@ -6,7 +6,6 @@ import ApiError from '../../../errors/ApiError';
 import generateOtp from '../../../helpers/generateOtp';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import { emailService } from '../../../shared/emailService';
-import { logger } from '../../../shared/logger';
 import { EStatus } from '../../users/user.enum';
 import { IUser } from '../../users/user.interface';
 import { User } from '../../users/user.model';
@@ -64,10 +63,12 @@ const signup = async (payload: TSignupPayload): Promise<TSignupResponse> => {
   emailService
     .sendWelcomeEmail(newUser.email, newUser.name)
     .then(() => {
-      logger.info(`Welcome email sent successfully to ${newUser.email}`);
+      // logger.info(`Welcome email sent successfully to ${newUser.email}`);
+      console.info(`Welcome email sent successfully to ${newUser.email}`);
     })
     .catch(error => {
-      logger.error(`Failed to send welcome email to ${newUser.email}:`, error);
+      // logger.error(`Failed to send welcome email to ${newUser.email}:`, error);
+      console.error(`Failed to send welcome email to ${newUser.email}:`, error);
     });
 
   // Remove password from response

@@ -1,6 +1,5 @@
 import nodemailer, { Transporter } from 'nodemailer';
 import config from '../config';
-import { logger } from './logger';
 
 interface EmailOptions {
   to: string;
@@ -35,11 +34,15 @@ class EmailService {
       };
 
       const info = await this.transporter.sendMail(mailOptions);
-      logger.info(
+      // logger.info(
+      //   `Email sent successfully to ${options.to}: ${info.messageId}`
+      // );
+      console.info(
         `Email sent successfully to ${options.to}: ${info.messageId}`
       );
     } catch (error) {
-      logger.error('Error sending email:', error);
+      // logger.error('Error sending email:', error);
+      console.error('Error sending email:', error);
       throw new Error('Failed to send email');
     }
   }
