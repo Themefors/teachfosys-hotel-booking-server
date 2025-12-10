@@ -1,7 +1,6 @@
 import httpStatus from 'http-status';
 import config from '../../../config';
-import { getRedisClient } from '../../../config/redis';
-import { OTP_EXPIRY_TIME } from '../../../constants/redis';
+// import { getRedisClient } from '../../../config/redis';
 import ApiError from '../../../errors/ApiError';
 import generateOtp from '../../../helpers/generateOtp';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
@@ -93,14 +92,14 @@ const sendOtp = async ({ email, name }: Pick<IUser, 'email' | 'name'>) => {
 
   const otp = generateOtp();
 
-  const redisKey = `otp:${email}`;
+  // const redisKey = `otp:${email}`;
 
-  await getRedisClient().set(redisKey, otp, {
-    expiration: {
-      type: 'EX',
-      value: OTP_EXPIRY_TIME,
-    },
-  });
+  // await getRedisClient().set(redisKey, otp, {
+  //   expiration: {
+  //     type: 'EX',
+  //     value: OTP_EXPIRY_TIME,
+  //   },
+  // });
 
   await emailService.sendOtpEmail(email, name, otp);
 };
@@ -115,12 +114,12 @@ const verifyOtp = async ({ email, otp }: { email: string; otp: string }) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'User is already verified');
   }
 
-  const redisKey = `otp:${email}`;
-  const storedOtp = await getRedisClient().get(redisKey);
+  // const redisKey = `otp:${email}`;
+  // const storedOtp = await getRedisClient().get(redisKey);
 
-  if (!storedOtp || storedOtp !== otp) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid or expired OTP');
-  }
+  // if (!storedOtp || storedOtp !== otp) {
+  //   throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid or expired OTP');
+  // }
 
   Promise.all([
     await User.findOneAndUpdate(
@@ -128,7 +127,7 @@ const verifyOtp = async ({ email, otp }: { email: string; otp: string }) => {
       { isVerified: true },
       { runValidators: true }
     ),
-    await getRedisClient().del([redisKey]),
+    // await getRedisClient().del([redisKey]),
   ]);
 };
 
