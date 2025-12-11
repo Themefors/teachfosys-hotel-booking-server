@@ -10,7 +10,7 @@ router.get('/:roomId', RoomController.getRoomById);
 
 router.post(
   '/',
-  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.MANAGER),
+  // auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.MANAGER),
   RoomController.createRoom
 );
 

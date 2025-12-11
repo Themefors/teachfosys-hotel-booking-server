@@ -10,7 +10,7 @@ export interface IRoom {
   images: string[];
   thumbnail: string;
   name: string;
-  size: string;
+  size_in_sq_ft: number;
   category: string;
   person_num: number;
   bed_room: number;

@@ -43,10 +43,10 @@ const roomSchema = new Schema<IRoom, RoomModel, IRoomMethods>(
       required: true,
       trim: true,
     },
-    size: {
-      type: String, // e.g. "30 m²", "500 sq ft"
+    size_in_sq_ft: {
+      type: Number,
       required: true,
-      trim: true,
+      min: 0,
     },
     category: {
       type: String, // e.g. "Deluxe", "Suite"

@@ -4,7 +4,7 @@
 
 This is a comprehensive API documentation for the TeachFosys Hotel Booking System backend. The API is built using Node.js, Express, TypeScript, and MongoDB with Zod for validation.
 
-**Base URL**: `http://localhost:5000/api/v1`
+**Base URL**: `https://teachfosys-hotel-booking-server.vercel.app/api/v1`
 
 **Authentication**: JWT Bearer Token (Cookie-based)
 
@@ -649,9 +649,23 @@ Add general hotel information.
 
 ```json
 {
-  "key": "hotel_address",
-  "value": "123 Main Street, City, Country",
-  "description": "Main hotel address"
+  "heroTitle": "Welcome to Paradise Resort & Spa",
+  "heroSubtitle": "Experience Luxury and Comfort in the Heart of Nature",
+  "heroButtonText": "Book Your Stay",
+  "heroButtonLink": "/booking",
+  "logo": "https://example.com/uploads/logo.png",
+  "location": "Maldives",
+  "description": "Paradise Resort & Spa offers an unforgettable experience with stunning ocean views, world-class amenities, and exceptional service. Our resort features luxurious rooms, fine dining restaurants, a full-service spa, and direct beach access.",
+  "socials": {
+    "facebook": "https://facebook.com/paradiseresort",
+    "instagram": "https://instagram.com/paradiseresort",
+    "twitter": "https://twitter.com/paradiseresort",
+    "linkedin": "https://linkedin.com/company/paradiseresort"
+  },
+  "address": "123 Ocean Drive, North Malé Atoll, Maldives 20026",
+  "email": "info@paradiseresort.com",
+  "phone": "+960 664-1234",
+  "copy_right": "© 2025 Paradise Resort & Spa. All rights reserved."
 }
 ```
 
@@ -659,7 +673,7 @@ Add general hotel information.
 
 ### 3. Update General Info
 
-**PATCH** `/general-info/:id`
+**PATCH** `/general-info/update`
 
 Update general information.
 
@@ -815,7 +829,7 @@ Most endpoints require authentication. Check individual endpoint documentation f
 
 ### Quick Start Guide for Frontend Developers
 
-1. **Base URL**: `http://localhost:5000/api/v1`
+1. **Base URL**: `https://teachfosys-hotel-booking-server.vercel.app`
 
 2. **Authentication Flow**:
 

@@ -1,4 +1,3 @@
-// src/app/modules/room/room.controller.ts
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../shared/catchAsync';
@@ -57,9 +56,7 @@ const getRoomById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const createRoom = catchAsync(async (req: Request, res: Response) => {
-  const roomData = req.body;
-
-  const room = await RoomService.createRoom(roomData);
+  const room = await RoomService.createRoom(req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,

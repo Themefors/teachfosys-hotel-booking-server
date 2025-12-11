@@ -1,4 +1,3 @@
-// src/app/modules/room/room.service.ts
 import httpStatus from 'http-status';
 import { SortOrder } from 'mongoose';
 import ApiError from '../../errors/ApiError';
@@ -94,7 +93,6 @@ const getSingleRoom = async (roomId: string): Promise<IRoom> => {
 };
 
 const createRoom = async (payload: IRoom): Promise<IRoom> => {
-  // You can omit createdAt/updatedAt; timestamps option will handle them
   const room = await Room.create(payload);
   return room;
 };
