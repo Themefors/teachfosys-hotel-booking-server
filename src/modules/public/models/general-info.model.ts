@@ -2,6 +2,10 @@ import { Schema, model } from 'mongoose';
 
 const generalInfoSchema = new Schema(
   {
+    heroTitle: { type: String, required: true },
+    heroSubtitle: { type: String, required: true },
+    heroButtonText: { type: String, required: true },
+    heroButtonLink: { type: String, required: true },
     logo: {
       type: String,
       required: false,

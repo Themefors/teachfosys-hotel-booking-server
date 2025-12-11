@@ -22,13 +22,13 @@ const createGeneralInfo = catchAsync(
   }
 );
 
-const getGeneralInfos = catchAsync(
+const getGeneralInfo = catchAsync(
   async (
     req: Request<any, any, IGeneralInfo[]>,
     res: Response,
     next: NextFunction
   ) => {
-    const result = await GeneralInfoService.getGeneralInfos();
+    const result = await GeneralInfoService.getGeneralInfo();
 
     sendResponse<IGeneralInfo[]>(res, {
       statusCode: httpStatus.OK,
@@ -59,6 +59,6 @@ const updateGeneralInfo = catchAsync(
 
 export const GeneralInfoController = {
   createGeneralInfo,
-  getGeneralInfos,
+  getGeneralInfo,
   updateGeneralInfo,
 };

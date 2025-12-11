@@ -5,7 +5,7 @@ import { GeneralInfoValidation } from '../validations/general-info.validation';
 
 const router = express.Router();
 
-router.get('/', GeneralInfoController.getGeneralInfos);
+router.get('/', GeneralInfoController.getGeneralInfo);
 
 router.post(
   '/create',
@@ -14,7 +14,7 @@ router.post(
 );
 
 router.patch(
-  '/:id',
+  '/update',
   validateRequest(GeneralInfoValidation.updateGeneralInfoZodSchema),
   GeneralInfoController.updateGeneralInfo
 );

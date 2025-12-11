@@ -2,6 +2,10 @@ import { z } from 'zod';
 
 export const createGeneralInfoZodSchema = z.object({
   body: z.object({
+    heroTitle: z.string(),
+    heroSubtitle: z.string(),
+    heroButtonText: z.string(),
+    heroButtonLink: z.string(),
     logo: z.string().optional(),
     location: z.string(),
     description: z.string(),
@@ -15,6 +19,10 @@ export const createGeneralInfoZodSchema = z.object({
 
 export const updateGeneralInfoZodSchema = z.object({
   body: z.object({
+    heroTitle: z.string().optional(),
+    heroSubtitle: z.string().optional(),
+    heroButtonText: z.string().optional(),
+    heroButtonLink: z.string().optional(),
     logo: z.string().optional(),
     location: z.string().optional(),
     description: z.string().optional(),
