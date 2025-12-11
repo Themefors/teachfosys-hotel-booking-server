@@ -30,7 +30,7 @@ const getGeneralInfo = catchAsync(
   ) => {
     const result = await GeneralInfoService.getGeneralInfo();
 
-    sendResponse<IGeneralInfo[]>(res, {
+    sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
       message: 'General info fetched successfully.',
@@ -45,8 +45,7 @@ const updateGeneralInfo = catchAsync(
     res: Response,
     next: NextFunction
   ) => {
-    const { id } = req.params;
-    const result = await GeneralInfoService.updateGeneralInfo(id, req.body);
+    const result = await GeneralInfoService.updateGeneralInfo(req.body);
 
     sendResponse<IGeneralInfo>(res, {
       statusCode: httpStatus.OK,
