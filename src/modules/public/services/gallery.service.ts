@@ -11,19 +11,6 @@ const getGalleries = async (): Promise<IGallery[]> => {
   return result;
 };
 
-const getGallery = async (id: string): Promise<IGallery | null> => {
-  const result = await Gallery.findById(id);
-  return result;
-};
-
-const getGalleryByCategory = async (category: string): Promise<IGallery[]> => {
-  const result = await Gallery.find({
-    category,
-    deletedAt: { $exists: false },
-  });
-  return result;
-};
-
 const updateGallery = async (
   id: string,
   payload: Partial<IGallery>
@@ -44,8 +31,6 @@ const deleteGallery = async (id: string): Promise<IGallery | null> => {
 export const GalleryService = {
   createGallery,
   getGalleries,
-  getGallery,
-  getGalleryByCategory,
   updateGallery,
   deleteGallery,
 };

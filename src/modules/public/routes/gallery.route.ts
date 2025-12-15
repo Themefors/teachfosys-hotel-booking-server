@@ -13,10 +13,6 @@ router.post(
 
 router.get('/', GalleryController.getGalleries);
 
-router.get('/category/:category', GalleryController.getGalleryByCategory);
-
-router.get('/:id', GalleryController.getGallery);
-
 router.patch(
   '/:id',
   validateRequest(GalleryValidation.updateGalleryZodSchema),

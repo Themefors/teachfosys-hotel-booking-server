@@ -23,6 +23,7 @@ const testimonialSchema = new Schema(
   },
   {
     timestamps: true,
+    versionKey: false,
     toJSON: {
       virtuals: true,
     },

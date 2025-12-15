@@ -39,34 +39,6 @@ const getGalleries = catchAsync(
   }
 );
 
-const getGallery = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const { id } = req.params;
-    const result = await GalleryService.getGallery(id);
-
-    sendResponse<IGallery | null>(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'Gallery item fetched successfully.',
-      data: result,
-    });
-  }
-);
-
-const getGalleryByCategory = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const { category } = req.params;
-    const result = await GalleryService.getGalleryByCategory(category);
-
-    sendResponse<IGallery[]>(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'Gallery items by category fetched successfully.',
-      data: result,
-    });
-  }
-);
-
 const updateGallery = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
@@ -98,8 +70,6 @@ const deleteGallery = catchAsync(
 export const GalleryController = {
   createGallery,
   getGalleries,
-  getGallery,
-  getGalleryByCategory,
   updateGallery,
   deleteGallery,
 };
